@@ -21,7 +21,6 @@ data class NotesItem(
     val colorHex: String = "#FFFFFF",
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now(),
-
 )
 
 @TypeConverters
