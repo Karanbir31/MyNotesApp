@@ -11,6 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.mynotesapp.navigation.AppNavGraph
 import com.example.mynotesapp.ui.theme.MyNotesAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,11 +25,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
+
             MyNotesAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                    ApplicationUI(
+                        navController = navController,
+                        modifier = Modifier.fillMaxSize().padding(innerPadding)
                     )
                 }
             }
@@ -34,17 +40,6 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MyNotesAppTheme {
-        Greeting("Android")
-    }
+fun ApplicationUI(navController: NavHostController, modifier: Modifier = Modifier) {
+    AppNavGraph(navController, modifier)
 }
