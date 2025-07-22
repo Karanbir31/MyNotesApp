@@ -7,7 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.mynotesapp.notedetails.NotesDetailsScreen
+import com.example.mynotesapp.notedetails.ui.NotesDetailsScreen
 import com.example.mynotesapp.notes.ui.AllNotesScreen
 
 @Composable

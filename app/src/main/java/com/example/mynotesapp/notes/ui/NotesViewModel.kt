@@ -43,6 +43,8 @@ class NotesViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 repository.deleteNote(notesItem)
+
+                readAllNotes()
             } catch (e: Exception) {
                 Log.e(logTag, e.message, e)
             }

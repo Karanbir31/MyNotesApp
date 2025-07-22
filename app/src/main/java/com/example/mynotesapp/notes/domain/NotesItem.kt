@@ -5,6 +5,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
+import java.text.DateFormat
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -23,8 +25,18 @@ data class NotesItem(
     val updatedAt: LocalDateTime = LocalDateTime.now(),
 ){
     fun getLocalDateTimeAsString() : String{
-        val dateTimeFormat = DateTimeFormatter.ISO_LOCAL_DATE_TIME
-        return this.updatedAt.format(dateTimeFormat)
+        val dateFormat = DateTimeFormatter.ofPattern("dd MMM")
+        val timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss")
+
+        val date = this.updatedAt.toLocalDate()
+        val time = this.updatedAt.toLocalTime()
+
+        return if (date.isEqual(LocalDate.now())){
+            time.format(timeFormat)
+        }else{
+            date.format(dateFormat)
+        }
+
     }
 }
 

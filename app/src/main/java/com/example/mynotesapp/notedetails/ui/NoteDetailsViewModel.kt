@@ -1,4 +1,4 @@
-package com.example.mynotesapp.notedetails
+package com.example.mynotesapp.notedetails.ui
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
