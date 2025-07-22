@@ -3,7 +3,7 @@ package com.example.mynotesapp
 import android.content.Context
 import androidx.room.Room
 import com.example.mynotesapp.database.NotesDataBase
-import com.example.mynotesapp.notes.data.NotesDao
+import com.example.mynotesapp.database.NotesDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,7 +42,7 @@ object HiltModules {
     @Singleton
     fun providesNotesDao(
         notesDataBase: NotesDataBase
-    ): NotesDao{
+    ): NotesDao {
         return notesDataBase.notesDao
     }
 

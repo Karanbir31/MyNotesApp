@@ -1,5 +1,6 @@
 package com.example.mynotesapp.notes.data
 
+import com.example.mynotesapp.database.NotesDao
 import com.example.mynotesapp.notes.domain.NotesItem
 import com.example.mynotesapp.notes.domain.NotesRepository
 import javax.inject.Inject
