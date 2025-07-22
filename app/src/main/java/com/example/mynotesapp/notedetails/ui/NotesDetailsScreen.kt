@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -17,13 +18,19 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mynotesapp.R
+
 
 @Composable
 fun NotesDetailsScreen(
@@ -32,6 +39,14 @@ fun NotesDetailsScreen(
     noteDetailsViewModel: NoteDetailsViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+
+    var shouldCallSTT by remember { mutableStateOf(false) }
+
+    if (shouldCallSTT){
+        LaunchSpeechRecognizer{spokenText->
+            Toast.makeText(context, spokenText, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     LaunchedEffect(noteId) {
         if (noteId >= 0) {
@@ -57,6 +72,23 @@ fun NotesDetailsScreen(
 
                 navController.popBackStack()
             }
+            )
+        },
+
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                text = {
+                    Text(text = "Voice Note", fontFamily = FontFamily.Cursive)
+                },
+                icon = {
+                    Icon(
+                        painterResource(R.drawable.baseline_mic_24),
+                        contentDescription = "Add new note"
+                    )
+                },
+                onClick = {
+                    shouldCallSTT = true
+                }
             )
         }
 

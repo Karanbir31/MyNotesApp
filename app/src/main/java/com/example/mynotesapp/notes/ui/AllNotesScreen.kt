@@ -268,10 +268,6 @@ fun NoteItemUi(note: NotesItem, onNoteUpdate: (NotesItem) -> Unit, onClickNote: 
                     "Delete"
                 )
             }
-
-
         }
-
-
     }
 }
