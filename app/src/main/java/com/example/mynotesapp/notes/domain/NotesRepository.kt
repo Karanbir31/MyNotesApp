@@ -6,6 +6,8 @@ interface NotesRepository {
 
     suspend fun readAllNotes() : List<NotesItem>
 
+    suspend fun readNoteWithId(noteId : Long) : NotesItem
+
     suspend fun updateNote(notesItem: NotesItem)
 
     suspend fun deleteNote(notesItem: NotesItem)

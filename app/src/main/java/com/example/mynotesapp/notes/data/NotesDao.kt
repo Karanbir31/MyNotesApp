@@ -17,6 +17,9 @@ interface NotesDao {
     @Query("SELECT * FROM notes ORDER BY updatedAt DESC")
     suspend fun readAllNotes() : List<NotesItem>
 
+    @Query("SELECT * FROM notes WHERE id = :noteId  ORDER BY updatedAt DESC")
+    suspend fun readNoteWithId(noteId : Long) : NotesItem
+
     @Update
     suspend fun updateNote(notesItem: NotesItem)
 

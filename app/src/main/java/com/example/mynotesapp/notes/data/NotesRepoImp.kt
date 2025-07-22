@@ -14,6 +14,10 @@ class NotesRepoImp @Inject constructor(private val notesDao: NotesDao) : NotesRe
        return notesDao.readAllNotes()
     }
 
+    override suspend fun readNoteWithId(noteId: Long): NotesItem {
+        return notesDao.readNoteWithId(noteId)
+    }
+
     override suspend fun updateNote(notesItem: NotesItem) {
        notesDao.updateNote(notesItem)
     }

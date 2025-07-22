@@ -1,6 +1,6 @@
 package com.example.mynotesapp.notes.ui
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -43,15 +43,18 @@ fun AllNotesScreen(
     navController: NavController,
     notesViewModel: NotesViewModel = hiltViewModel()
 ) {
+
+    LaunchedEffect(Unit) {
+        notesViewModel.readAllNotes()
+    }
+
     val allNotesState = notesViewModel.allNotes
-
-
 
     Scaffold(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 text = {
-                    Text(text= "Add note", fontFamily = FontFamily.Cursive,)
+                    Text(text= "Add note", fontFamily = FontFamily.Cursive)
                 },
                 icon = {
                     Icon(
@@ -70,11 +73,11 @@ fun AllNotesScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it),
-            onNoteUpdate = {
-                notesViewModel.updateNote(it)
+            onNoteUpdate = {updatedNote->
+                notesViewModel.updateNoteOnDataBase(updatedNote)
             },
-            onClickNote = {
-                navController.navigate(NavigationRoutes.NotesDetails.createRoute(it))
+            onClickNote = {noteId->
+                navController.navigate(NavigationRoutes.NotesDetails.createRoute(noteId))
             }
         )
     }
@@ -89,6 +92,8 @@ fun AllNotesScreenUi(
     onNoteUpdate: (NotesItem) -> Unit,
     onClickNote: (Long) -> Unit,
 ) {
+
+
 
     val allNotes by allNotesState.collectAsState()
 
@@ -151,6 +156,9 @@ fun NoteItemUi(note: NotesItem, onNoteUpdate: (NotesItem) -> Unit, onClickNote: 
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable {
+                onClickNote.invoke(note.id)
+            }
             .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 8.dp)
     ) {
 

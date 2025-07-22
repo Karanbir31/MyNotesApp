@@ -1,4 +1,4 @@
-package com.example.mynotesapp.notes.ui
+package com.example.mynotesapp.notedetails
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -9,28 +9,21 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
-
-sealed class NotesItemState() {
-    object Loading : NotesItemState()
-    class Success(val data: NotesItem) : NotesItemState()
-    class Error(val errorMsg: String) : NotesItemState()
-}
-
 @HiltViewModel
-class NotesViewModel @Inject constructor(
-    private val repository: NotesRepository
-) : ViewModel() {
-    private val logTag = "NotesViewModel"
+class NoteDetailsViewModel @Inject constructor (private val repository: NotesRepository) : ViewModel() {
+    private val logTag = "NoteDetailsViewModel"
 
-    private val _allNotes = MutableStateFlow<List<NotesItem>>(emptyList())
-    val allNotes: StateFlow<List<NotesItem>> get() = _allNotes
+    private val _note = MutableStateFlow<NotesItem>(NotesItem())
+    val note: StateFlow<NotesItem> get() = _note
 
-    fun readAllNotes() {
+
+    fun readNoteWithId(noteId: Long) {
         viewModelScope.launch {
             try {
-                _allNotes.value = repository.readAllNotes()
+                _note.value = repository.readNoteWithId(noteId)
             } catch (e: Exception) {
                 Log.e(logTag, e.message, e)
             }
@@ -38,25 +31,32 @@ class NotesViewModel @Inject constructor(
     }
 
 
-
-    fun deleteNote(notesItem: NotesItem) {
+    fun saveNewNote() {
         viewModelScope.launch {
             try {
-                repository.deleteNote(notesItem)
+                repository.addNoteItem(_note.value)
             } catch (e: Exception) {
                 Log.e(logTag, e.message, e)
             }
         }
     }
 
-    fun updateNoteOnDataBase(notesItem: NotesItem){
+    fun updateNoteOnDataBase() {
         viewModelScope.launch {
             try {
-                repository.updateNote(notesItem)
+                repository.updateNote(_note.value)
             } catch (e: Exception) {
                 Log.e(logTag, e.message, e)
             }
         }
+    }
+
+    fun updateLocalTitle(title: String) {
+        _note.value = _note.value.copy(title = title, updatedAt = LocalDateTime.now())
+    }
+
+    fun updateLocalContent(title: String) {
+        _note.value = _note.value.copy(content = title, updatedAt = LocalDateTime.now())
     }
 
 
