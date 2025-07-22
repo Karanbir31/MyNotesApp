@@ -1,5 +1,7 @@
 package com.example.mynotesapp.notes.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,9 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,8 +25,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,71 +45,101 @@ fun AllNotesScreen(
 ) {
     val allNotesState = notesViewModel.allNotes
 
-    AllNotesScreenUi(
-        allNotesState = allNotesState,
-        onNoteUpdate = {
-            notesViewModel.updateNote(it)
-        },
-        onClickNote = {
-            navController.navigate(NavigationRoutes.NotesDetails.createRoute(it))
+
+
+    Scaffold(
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                text = {
+                    Text(text= "Add note", fontFamily = FontFamily.Cursive,)
+                },
+                icon = {
+                    Icon(
+                        painterResource(R.drawable.outline_add_notes_24),
+                        contentDescription = "Add new note"
+                    )
+                },
+                onClick = {
+                    navController.navigate(NavigationRoutes.NotesDetails.createRoute(-1))
+                }
+            )
         }
-    )
+    ) {
+        AllNotesScreenUi(
+            allNotesState = allNotesState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
+            onNoteUpdate = {
+                notesViewModel.updateNote(it)
+            },
+            onClickNote = {
+                navController.navigate(NavigationRoutes.NotesDetails.createRoute(it))
+            }
+        )
+    }
+
 
 }
 
 @Composable
 fun AllNotesScreenUi(
     allNotesState: StateFlow<List<NotesItem>>,
+    modifier: Modifier,
     onNoteUpdate: (NotesItem) -> Unit,
-    onClickNote: (Long) -> Unit
+    onClickNote: (Long) -> Unit,
 ) {
 
     val allNotes by allNotesState.collectAsState()
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        item {
-            // filter sort
-        }
-
-        items(allNotes) { note ->
-            NoteItemUi(
-                note = note,
-                onNoteUpdate = {
-
-                },
-                onClickNote = {
-
-                }
-            )
-
-            Spacer(Modifier.padding(top = 8.dp))
-        }
-
-
-        item {
-            if (allNotes.isEmpty()) {
-                EmptyUi()
+    if (allNotes.isEmpty()) {
+        EmptyUi()
+    }else{
+        LazyColumn(
+            modifier = modifier,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            item {
+                // filter sort
             }
-        }
 
+            items(allNotes) { note ->
+                NoteItemUi(
+                    note = note,
+                    onNoteUpdate = {
+                        onNoteUpdate.invoke(it)
+                    },
+                    onClickNote = {
+                        onClickNote.invoke(it)
+                    }
+                )
+
+                Spacer(Modifier.padding(top = 8.dp))
+            }
+
+        }
     }
+
 }
 
 @Composable
 fun EmptyUi() {
-    Text(
-        text = "Data not available",
-        style = MaterialTheme.typography.titleLarge,
-        modifier = Modifier.fillMaxWidth(),
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        fontFamily = FontFamily.Cursive
-    )
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ){
+        Text(
+            text = "Data not available",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.fillMaxWidth(),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            fontFamily = FontFamily.Cursive,
+            textAlign = TextAlign.Center
+        )
+    }
+
+
 }
 
 

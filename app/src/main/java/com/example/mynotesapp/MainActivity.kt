@@ -18,7 +18,6 @@ import com.example.mynotesapp.navigation.AppNavGraph
 import com.example.mynotesapp.ui.theme.MyNotesAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

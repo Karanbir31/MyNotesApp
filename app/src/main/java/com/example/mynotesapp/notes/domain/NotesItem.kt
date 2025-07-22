@@ -29,10 +29,9 @@ data class NotesItem(
 }
 
 @TypeConverters
-class LocalDateTimeTypeConvertor(){
+class LocalDateTimeTypeConvertor{
 
-    val dateTimeFormat = DateTimeFormatter.ISO_LOCAL_DATE_TIME
-
+    private val dateTimeFormat = DateTimeFormatter.ISO_LOCAL_DATE_TIME
 
     @TypeConverter
     fun fromLocalDateTime(date : LocalDateTime): String{

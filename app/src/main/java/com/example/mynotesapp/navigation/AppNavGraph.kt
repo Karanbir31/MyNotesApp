@@ -7,7 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.mynotesapp.notedetails.NotesDetails
+import com.example.mynotesapp.notedetails.NotesDetailsScreen
 import com.example.mynotesapp.notes.ui.AllNotesScreen
 
 @Composable
@@ -28,7 +28,7 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
             arguments = listOf(navArgument("noteId") { type = NavType.LongType })
         ) { navBackStackEntry ->
             val noteId = navBackStackEntry.arguments?.getLong("noteId") ?: 1L
-            NotesDetails(noteId, navController)
+            NotesDetailsScreen(noteId, navController)
         }
 
 
