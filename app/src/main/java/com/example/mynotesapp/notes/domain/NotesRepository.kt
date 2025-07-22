@@ -10,4 +10,10 @@ interface NotesRepository {
 
     suspend fun deleteNote(notesItem: NotesItem)
 
+    suspend fun getAllUncheckedNotes() : List<NotesItem>
+
+    suspend fun getAllCheckedNotes() : List<NotesItem>
+
+    suspend fun getAllPinnedNotes() : List<NotesItem>
+
 }

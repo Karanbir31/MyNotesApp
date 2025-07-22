@@ -14,7 +14,7 @@ interface NotesDao {
     @Insert
     suspend fun addNoteItem(notesItem: NotesItem)
 
-    @Query("SELECT * FROM NOTES")
+    @Query("SELECT * FROM notes ORDER BY updatedAt DESC")
     suspend fun readAllNotes() : List<NotesItem>
 
     @Update
@@ -23,4 +23,12 @@ interface NotesDao {
     @Delete
     suspend fun deleteNote(notesItem: NotesItem)
 
+    @Query("SELECT * FROM notes WHERE isChecklist = 0")
+    suspend fun getAllUncheckedNotes() : List<NotesItem>
+
+    @Query("SELECT * FROM notes WHERE isChecklist = 1")
+    suspend fun getAllCheckedNotes() : List<NotesItem>
+
+    @Query("SELECT * FROM notes WHERE isPinned = 1")
+    suspend fun getAllPinnedNotes() : List<NotesItem>
 }

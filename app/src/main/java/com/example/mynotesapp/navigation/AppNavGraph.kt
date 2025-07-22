@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.mynotesapp.notedetails.NotesDetails
-import com.example.mynotesapp.notes.ui.AllocationNotesScreen
+import com.example.mynotesapp.notes.ui.AllNotesScreen
 
 @Composable
 fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -20,7 +20,7 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
         composable(
             route = NavigationRoutes.AllNotesScreen.routes
         ) {
-            AllocationNotesScreen(navController)
+            AllNotesScreen(navController)
         }
 
         composable(

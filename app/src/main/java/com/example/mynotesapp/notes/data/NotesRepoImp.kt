@@ -21,4 +21,16 @@ class NotesRepoImp @Inject constructor(private val notesDao: NotesDao) : NotesRe
     override suspend fun deleteNote(notesItem: NotesItem) {
         notesDao.deleteNote(notesItem)
     }
+
+    override suspend fun getAllUncheckedNotes(): List<NotesItem> {
+        return notesDao.getAllUncheckedNotes()
+    }
+
+    override suspend fun getAllCheckedNotes(): List<NotesItem> {
+        return notesDao.getAllCheckedNotes()
+    }
+
+    override suspend fun getAllPinnedNotes(): List<NotesItem> {
+        return notesDao.getAllPinnedNotes()
+    }
 }

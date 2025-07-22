@@ -21,7 +21,12 @@ data class NotesItem(
     val colorHex: String = "#FFFFFF",
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now(),
-)
+){
+    fun getLocalDateTimeAsString() : String{
+        val dateTimeFormat = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+        return this.updatedAt.format(dateTimeFormat)
+    }
+}
 
 @TypeConverters
 class LocalDateTimeTypeConvertor(){
