@@ -6,8 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.mynotesapp.notes.domain.NotesItem
 import com.example.mynotesapp.notes.domain.NotesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -18,6 +21,9 @@ class NoteDetailsViewModel @Inject constructor (private val repository: NotesRep
 
     private val _note = MutableStateFlow<NotesItem>(NotesItem())
     val note: StateFlow<NotesItem> get() = _note
+
+    private val _triggerSpeechRecognizer  = MutableSharedFlow<Unit>()
+    val triggerSpeechRecognizer = _triggerSpeechRecognizer.asSharedFlow()
 
 
     fun readNoteWithId(noteId: Long) {
@@ -57,6 +63,18 @@ class NoteDetailsViewModel @Inject constructor (private val repository: NotesRep
 
     fun updateLocalContent(title: String) {
         _note.value = _note.value.copy(content = title, updatedAt = LocalDateTime.now())
+    }
+
+    fun onClickMicButton(){
+        viewModelScope.launch {
+            _triggerSpeechRecognizer.emit(Unit)
+        }
+    }
+
+    fun updateNoteContentWithSpokenText(spokenText : String){
+        var updatedContent = _note.value.content
+        updatedContent = "$updatedContent $spokenText"
+        _note.value = _note.value.copy(content =updatedContent, updatedAt = LocalDateTime.now())
     }
 
 

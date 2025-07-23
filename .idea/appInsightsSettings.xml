@@ -22,10 +22,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.mynotesapp" />
+                  <option name="mobileSdkAppId" value="1:857229623800:android:901382f611c61c28f6560d" />
+                  <option name="projectId" value="notes-application-e817d" />
+                  <option name="projectNumber" value="857229623800" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

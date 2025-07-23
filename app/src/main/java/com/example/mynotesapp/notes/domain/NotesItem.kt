@@ -22,7 +22,9 @@ data class NotesItem(
     val isChecklist: Boolean = false,
     val colorHex: String = "#FFFFFF",
     val createdAt: LocalDateTime = LocalDateTime.now(),
-    val updatedAt: LocalDateTime = LocalDateTime.now(),
+    val updatedAt: LocalDateTime = LocalDateTime.now()
+
+
 ){
     fun getLocalDateTimeAsString() : String{
         val dateFormat = DateTimeFormatter.ofPattern("dd MMM")

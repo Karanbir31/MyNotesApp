@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.mynotesapp.database.NotesDataBase
 import com.example.mynotesapp.database.NotesDao
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,6 +45,15 @@ object HiltModules {
         notesDataBase: NotesDataBase
     ): NotesDao {
         return notesDataBase.notesDao
+    }
+
+
+    @Provides
+    @Singleton
+    fun providesFirebaseFirestore(
+        context: Context
+    ): FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
     }
 
 
