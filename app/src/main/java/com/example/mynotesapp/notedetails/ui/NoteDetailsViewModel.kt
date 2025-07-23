@@ -50,7 +50,7 @@ class NoteDetailsViewModel @Inject constructor (private val repository: NotesRep
     fun updateNoteOnDataBase() {
         viewModelScope.launch {
             try {
-                repository.updateNote(_note.value)
+                repository.updateNote(_note.value.copy(isSynced = false))
             } catch (e: Exception) {
                 Log.e(logTag, e.message, e)
             }

@@ -250,7 +250,7 @@ fun NoteItemUi(note: NotesItem, onNoteUpdate: (NotesItem) -> Unit, onClickNote: 
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "last update ${note.getLocalDateTimeAsString()}",
+                text = "last update ${note.getLastUpdatedAt()}",
                 style = TextStyle(fontSize = 18.sp),
                 color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f),
                 modifier = Modifier
