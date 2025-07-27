@@ -10,10 +10,11 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+import com.google.firebase.Timestamp
 
 @Entity(tableName = "notes")
 data class NotesItem(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey()
     val id: Long = 0L,
     val title: String = "",
     val content: String = "",
@@ -34,34 +35,37 @@ data class NotesItem(
     var isChecklist: Boolean = false,
 
     val colorHex: String = "#FFFFFF",
-    val createdAt: LocalDateTime = LocalDateTime.now(),
-    val updatedAt: LocalDateTime = LocalDateTime.now(),
+    val createdAt: Timestamp = Timestamp.now(),
+    val updatedAt: Timestamp = Timestamp.now(),
 
     @PropertyName("isSynced")
     @get:PropertyName("isSynced")
     @set:PropertyName("isSynced")
     var isSynced: Boolean = false,
 
-    val lastSyncedAt: LocalDateTime? = null,
+    val lastSyncedAt: Timestamp? = null,
 
     @PropertyName("isDeleted")
     @get:PropertyName("isDeleted")
     @set:PropertyName("isDeleted")
     var isDeleted: Boolean = false,
-    val deletedAt: LocalDateTime? = null
 
+    val deletedAt: Timestamp? = null
 ) {
-    fun getDeletedAt() : String{
-        val temp : LocalDateTime = this.deletedAt ?: return ""
-        return localDateTimeFormater(temp)
+    fun getNoteDeletedAt(): String {
+        val temp: Timestamp = this.deletedAt ?: return ""
+        return timestampFormatter(temp)
     }
-
 
     fun getLastUpdatedAt(): String {
-        return localDateTimeFormater(this.updatedAt)
+        return timestampFormatter(this.updatedAt)
     }
 
-    private fun localDateTimeFormater(localDateTime: LocalDateTime) : String{
+    private fun timestampFormatter(timestamp: Timestamp): String {
+        val localDateTime = timestamp.toDate().toInstant()
+            .atZone(java.time.ZoneId.systemDefault())
+            .toLocalDateTime()
+
         val dateFormat = DateTimeFormatter.ofPattern("dd MMM")
         val timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss")
 
@@ -74,25 +78,18 @@ data class NotesItem(
             date.format(dateFormat)
         }
     }
-
-
-
 }
 
 @TypeConverters
-class LocalDateTimeTypeConvertor {
-
-    private val dateTimeFormat = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+class TimestampTypeConverter {
 
     @TypeConverter
-    fun fromLocalDateTime(date: LocalDateTime): String {
-        return date.format(dateTimeFormat)
+    fun fromTimestamp(timestamp: Timestamp?): Long? {
+        return timestamp?.toDate()?.time // millis
     }
 
     @TypeConverter
-    fun toLocalDateTime(date: String): LocalDateTime {
-        return LocalDateTime.parse(date, dateTimeFormat)
+    fun toTimestamp(millis: Long?): Timestamp? {
+        return millis?.let { Timestamp(java.util.Date(it)) }
     }
-
-
 }

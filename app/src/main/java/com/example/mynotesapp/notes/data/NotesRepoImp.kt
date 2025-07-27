@@ -5,6 +5,7 @@ import com.example.mynotesapp.database.FirebaseHelper
 import com.example.mynotesapp.database.NotesDao
 import com.example.mynotesapp.notes.domain.NotesItem
 import com.example.mynotesapp.notes.domain.NotesRepository
+import com.google.firebase.Timestamp
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -16,7 +17,9 @@ class NotesRepoImp @Inject constructor(
     private val tag = "NotesRepoImp"
 
     override suspend fun addNoteItem(notesItem: NotesItem) {
+
         val newNote = notesItem.copy(
+            id = notesItem.createdAt.toDate().time,
             updatedAt = notesItem.createdAt,
             isSynced = false
         )
@@ -29,7 +32,7 @@ class NotesRepoImp @Inject constructor(
         try {
             val updatedNote = note.copy(
                 isSynced = true,
-                lastSyncedAt = LocalDateTime.now()
+                lastSyncedAt = Timestamp.now()
             )
 
             firebaseDB.addNoteItem(updatedNote)
@@ -41,7 +44,7 @@ class NotesRepoImp @Inject constructor(
         }
     }
 
-    private suspend fun syncLocalDatabaseWithFirebase() {
+    suspend fun syncLocalDatabaseWithFirebase() {
         val allNotes = notesDao.readAllNotes()
         allNotes.forEach { note ->
             if (!note.isSynced) {
@@ -53,7 +56,6 @@ class NotesRepoImp @Inject constructor(
 
     override suspend fun readAllNotes(): List<NotesItem> {
         val allNotes = notesDao.readAllNotes()
-
         return allNotes
     }
 
@@ -73,7 +75,7 @@ class NotesRepoImp @Inject constructor(
     private suspend fun updateNoteOnFirebase(notesItem: NotesItem) {
         val updatedNote = notesItem.copy(
             isSynced = true,
-            lastSyncedAt = LocalDateTime.now()
+            lastSyncedAt = Timestamp.now()
         )
 
         try {
@@ -93,7 +95,7 @@ class NotesRepoImp @Inject constructor(
             notesItem.copy(
                 isSynced = false,
                 isDeleted = true,
-                deletedAt = LocalDateTime.now()
+                deletedAt = Timestamp.now()
             )
         )
 

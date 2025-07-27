@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.mynotesapp.authentiction.AuthScreen
 import com.example.mynotesapp.notedetails.ui.NotesDetailsScreen
 import com.example.mynotesapp.notes.ui.AllNotesScreen
 
@@ -17,6 +18,11 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
         startDestination = NavigationRoutes.AllNotesScreen.routes
     ) {
 
+        composable(
+            route = NavigationRoutes.AuthScreen.routes
+        ) {
+            AuthScreen(navController)
+        }
         composable(
             route = NavigationRoutes.AllNotesScreen.routes
         ) {

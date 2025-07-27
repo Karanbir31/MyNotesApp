@@ -1,9 +1,11 @@
 package com.example.mynotesapp
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
-import com.example.mynotesapp.database.NotesDataBase
 import com.example.mynotesapp.database.NotesDao
+import com.example.mynotesapp.database.NotesDataBase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
@@ -31,7 +33,7 @@ object HiltModules {
     fun providerRoomDataBase(
         @ApplicationContext context: Context
     ): NotesDataBase {
-       return Room.databaseBuilder(
+        return Room.databaseBuilder(
             context,
             NotesDataBase::class.java,
             "Notes_DataBase"
@@ -50,10 +52,23 @@ object HiltModules {
 
     @Provides
     @Singleton
-    fun providesFirebaseFirestore(
-        context: Context
-    ): FirebaseFirestore {
+    fun providesFirebaseFirestore(): FirebaseFirestore {
         return FirebaseFirestore.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun providesFirebaseAuth(): FirebaseAuth {
+        return FirebaseAuth.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun providesSharedPref(
+        @ApplicationContext context : Context
+    ): SharedPreferences {
+        val sharedPerfName = "notes_pref"
+        return context.getSharedPreferences(sharedPerfName, Context.MODE_PRIVATE )
     }
 
 

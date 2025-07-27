@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mynotesapp.notes.domain.NotesItem
 import com.example.mynotesapp.notes.domain.NotesRepository
+import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,11 +59,11 @@ class NoteDetailsViewModel @Inject constructor (private val repository: NotesRep
     }
 
     fun updateLocalTitle(title: String) {
-        _note.value = _note.value.copy(title = title, updatedAt = LocalDateTime.now())
+        _note.value = _note.value.copy(title = title, updatedAt = Timestamp.now())
     }
 
     fun updateLocalContent(title: String) {
-        _note.value = _note.value.copy(content = title, updatedAt = LocalDateTime.now())
+        _note.value = _note.value.copy(content = title, updatedAt = Timestamp.now())
     }
 
     fun onClickMicButton(){
@@ -74,7 +75,7 @@ class NoteDetailsViewModel @Inject constructor (private val repository: NotesRep
     fun updateNoteContentWithSpokenText(spokenText : String){
         var updatedContent = _note.value.content
         updatedContent = "$updatedContent $spokenText"
-        _note.value = _note.value.copy(content =updatedContent, updatedAt = LocalDateTime.now())
+        _note.value = _note.value.copy(content =updatedContent, updatedAt = Timestamp.now())
     }
 
 
