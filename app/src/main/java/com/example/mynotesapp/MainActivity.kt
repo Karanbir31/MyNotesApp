@@ -1,6 +1,5 @@
 package com.example.mynotesapp
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,7 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.mynotesapp.navigation.AppNavGraph
+import com.example.mynotesapp.navigation.NavigationRoutes
 import com.example.mynotesapp.ui.theme.MyNotesAppTheme
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,15 +40,12 @@ class MainActivity : ComponentActivity() {
 }
 
 
-fun checkForRecentInstall(context: Context): Boolean {
-    val sharedPerfName = "notes_pref"
-    val sharedPerf = context.getSharedPreferences(sharedPerfName, Context.MODE_PRIVATE)
-
-    return sharedPerf.getBoolean("installation_flag", false)
-
-}
-
 @Composable
 fun ApplicationUI(navController: NavHostController, modifier: Modifier = Modifier) {
-    AppNavGraph(navController, modifier)
+    val currentUser = FirebaseAuth.getInstance().currentUser
+    val startDestination =
+        if (currentUser != null) NavigationRoutes.AllNotesScreen.routes
+        else NavigationRoutes.AuthScreen.routes
+
+    AppNavGraph(navController, startDestination ,modifier)
 }

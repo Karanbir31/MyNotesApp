@@ -12,7 +12,7 @@ import com.example.mynotesapp.notedetails.ui.NotesDetailsScreen
 import com.example.mynotesapp.notes.ui.AllNotesScreen
 
 @Composable
-fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
+fun AppNavGraph(navController: NavHostController, startDestination : String ,modifier: Modifier = Modifier) {
     NavHost(
         navController = navController,
         startDestination = NavigationRoutes.AllNotesScreen.routes

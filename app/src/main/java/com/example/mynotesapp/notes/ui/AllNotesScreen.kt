@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -68,6 +70,18 @@ fun AllNotesScreen(
             TopAppBar(
                 title = {
                     Text("My Notes")
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.MoreVert,
+                            "menu"
+                        )
+                    }
                 }
             )
         },
@@ -102,7 +116,7 @@ fun AllNotesScreen(
             onClickNote = { noteId ->
                 navController.navigate(NavigationRoutes.NotesDetails.createRoute(noteId))
             },
-            onDeleteNote = {note->
+            onDeleteNote = { note ->
                 notesViewModel.deleteNote(note)
             }
         )
@@ -178,7 +192,12 @@ fun EmptyUi() {
 
 
 @Composable
-fun NoteItemUi(note: NotesItem, onNoteUpdate: (NotesItem) -> Unit, onClickNote: (Long) -> Unit, onDeleteNote : (NotesItem) -> Unit) {
+fun NoteItemUi(
+    note: NotesItem,
+    onNoteUpdate: (NotesItem) -> Unit,
+    onClickNote: (Long) -> Unit,
+    onDeleteNote: (NotesItem) -> Unit
+) {
     var pinButtonState by remember { mutableStateOf(note.isPinned) }
     val icon = if (pinButtonState) R.drawable.ic_pin_selected else R.drawable.ic_pin_unselected
 

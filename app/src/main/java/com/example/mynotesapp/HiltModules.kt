@@ -56,11 +56,7 @@ object HiltModules {
         return FirebaseFirestore.getInstance()
     }
 
-    @Provides
-    @Singleton
-    fun providesFirebaseAuth(): FirebaseAuth {
-        return FirebaseAuth.getInstance()
-    }
+
 
     @Provides
     @Singleton

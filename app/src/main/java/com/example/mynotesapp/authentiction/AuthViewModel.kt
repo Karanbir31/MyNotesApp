@@ -9,38 +9,27 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val firebaseAuth : FirebaseAuthHelper
+    private val repo: AuthRepo
 ) : ViewModel() {
     private val tag = "AuthViewModel"
-    
 
-    fun  createUser(email : String, password : String, onComplete : (Boolean) -> Unit){
+    fun  createUser(email : String, password : String){
         try {
             viewModelScope.launch {
-                firebaseAuth.createUserInWithEmailPassword(email, password){
-                    // on complete
-                    onComplete.invoke(it)
-                }
+                repo.createUserWithEmailPassword(email, password)
             }
         }catch (e: Exception){
             Log.e(tag, "createUser: ${e.message}", e)
         }
     }
 
-    fun  signUser(email : String, password : String,  onComplete : (Boolean) -> Unit){
+    fun  signUser(email : String, password : String){
         try {
             viewModelScope.launch {
-                firebaseAuth.signInWithEmailPassword(email, password){
-                    // on complete
-                    onComplete.invoke(it)
-
-                }
+                repo.signInUserWithEmailPassword(email, password)
             }
         }catch (e: Exception){
             Log.e(tag, "signUser: ${e.message}", e)
         }
     }
-    
-    
-    
 }
