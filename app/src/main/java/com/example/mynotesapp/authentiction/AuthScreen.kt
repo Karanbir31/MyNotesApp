@@ -1,10 +1,15 @@
 package com.example.mynotesapp.authentiction
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -15,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -38,16 +44,7 @@ fun AuthScreen(
 
     AuthScreenUiInit(
         onClickSubmit = {email, password ->
-            authViewModel.createUser(email, password){result->
-                //onComplete
-                if (result) {
-                    Toast.makeText(context, "authentication successful", Toast.LENGTH_SHORT).show()
-                }else{
-                    Toast.makeText(context, "authentication failed", Toast.LENGTH_SHORT).show()
-                }
-
-            }
-
+            authViewModel.signUser(email, password)
         }
     )
 
@@ -63,36 +60,59 @@ fun AuthScreenUiInit(
     var password by remember { mutableStateOf("") }
     var showError by remember { mutableStateOf(false) }
 
-    // Email TextField (common for both)
-    OutlinedTextField(
-        value = email,
-        onValueChange = { email = it },
-        label = { Text("Email") },
-        modifier = Modifier
-            .fillMaxWidth(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-        isError = showError && !validateEmail(email)
-    )
-    if (showError && !validateEmail(email)) {
-        Text(
-            "Enter a valid email address.",
-            color = Color.Red,
-            style = MaterialTheme.typography.labelMedium
+
+    Column(
+        modifier = Modifier.fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // Email TextField (common for both)
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
+            modifier = Modifier
+                .fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            isError = showError && !validateEmail(email)
         )
+        if (showError && !validateEmail(email)) {
+            Text(
+                "Enter a valid email address.",
+                color = Color.Red,
+                style = MaterialTheme.typography.labelMedium
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Password TextField (common for both)
+        PasswordTextField(
+            password = password,
+            onPasswordChange = { password = it },
+            showError = showError
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        ElevatedButton(
+            onClick = {
+                if(validateEmail(email) && validatePassword(password)){
+                    onClickSubmit.invoke(email, password)
+                }else{
+                    showError = true
+                }
+            }
+        ) {
+
+
+            Text("Submit")
+
+        }
+
+
     }
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-    // Password TextField (common for both)
-    PasswordTextField(
-        password = password,
-        onPasswordChange = { password = it },
-        showError = showError
-    )
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-
 
 }
 
