@@ -15,6 +15,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -29,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -49,6 +53,7 @@ import androidx.navigation.NavController
 import com.example.mynotesapp.R
 import com.example.mynotesapp.navigation.NavigationRoutes
 import com.example.mynotesapp.notes.domain.NotesItem
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,6 +62,8 @@ fun AllNotesScreen(
     navController: NavController,
     notesViewModel: NotesViewModel = hiltViewModel()
 ) {
+
+    var appMenuState by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         notesViewModel.readAllNotes()
@@ -74,14 +81,35 @@ fun AllNotesScreen(
                 actions = {
                     IconButton(
                         onClick = {
-
+                            appMenuState = true
                         }
                     ) {
                         Icon(
                             Icons.Default.MoreVert,
-                            "menu"
+                            "Menu"
                         )
                     }
+
+                    DropdownMenu(expanded = appMenuState,
+                        onDismissRequest = {appMenuState = false}) {
+
+                        DropdownMenuItem(
+                           text = { Text("Sign out") },
+                            onClick = {
+                                FirebaseAuth.getInstance().signOut()
+                                navController.navigate(NavigationRoutes.AuthScreen.routes){
+                                    navController.popBackStack()
+
+                                }
+                            }
+                        )
+
+
+                    }
+
+
+
+
                 }
             )
         },

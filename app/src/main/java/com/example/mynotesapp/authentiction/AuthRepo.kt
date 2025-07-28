@@ -4,9 +4,6 @@ import android.content.Context
 import com.example.mynotesapp.database.FirebaseHelper
 import com.example.mynotesapp.database.NotesDao
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class AuthRepo @Inject constructor(

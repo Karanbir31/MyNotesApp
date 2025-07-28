@@ -1,18 +1,20 @@
 package com.example.mynotesapp.authentiction
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -32,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mynotesapp.R
+import com.example.mynotesapp.navigation.NavigationRoutes
 
 
 @Composable
@@ -43,8 +47,18 @@ fun AuthScreen(
     val context = LocalContext.current
 
     AuthScreenUiInit(
-        onClickSubmit = {email, password ->
-            authViewModel.signUser(email, password)
+        onClickSubmit = { email, password, isSignUp ->
+            if (isSignUp) {
+                authViewModel.createUser(email, password)
+            } else {
+                authViewModel.signUser(email, password) {
+                    navController.navigate(NavigationRoutes.AllNotesScreen.routes) {
+                        // navController.popBackStack()
+                    }
+                }
+            }
+
+
         }
     )
 
@@ -52,21 +66,44 @@ fun AuthScreen(
 
 @Composable
 fun AuthScreenUiInit(
-    onClickSubmit: (email: String, password: String) -> Unit
+    onClickSubmit: (email: String, password: String, isSignUp: Boolean) -> Unit
 ) {
     val context = LocalContext.current
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showError by remember { mutableStateOf(false) }
-
+    var isSignUp by remember { mutableStateOf(true) }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+
+        Row(Modifier.fillMaxWidth()) {
+            AuthScreenButton(
+                btnText = "Sign UP",
+                buttonColorState = isSignUp,
+                modifier = Modifier.weight(1f).padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                isSignUp = true
+            }
+
+            AuthScreenButton(
+                btnText = "Sign In",
+                buttonColorState = !isSignUp,
+                modifier = Modifier.weight(1f).padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                isSignUp = false
+            }
+
+        }
+
+
         // Email TextField (common for both)
         OutlinedTextField(
             value = email,
@@ -96,21 +133,19 @@ fun AuthScreenUiInit(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ElevatedButton(
-            onClick = {
-                if(validateEmail(email) && validatePassword(password)){
-                    onClickSubmit.invoke(email, password)
-                }else{
-                    showError = true
-                }
-            }
-        ) {
+       AuthScreenButton(
+           btnText = if (isSignUp) "SignUp" else "Sign In",
+           buttonColorState = true,
+           modifier = Modifier.fillMaxWidth().padding(16.dp)
+       ) {
 
+           if (validateEmail(email) && validatePassword(password)){
+               onClickSubmit.invoke(email, password, isSignUp)
+           }else{
+               showError = true
+           }
 
-            Text("Submit")
-
-        }
-
+       }
 
     }
 
@@ -155,8 +190,8 @@ fun validatePassword(input: String): Boolean {
     return input.length >= 4 &&
             input.any { it.isDigit() }
             &&
-     input.any { it.isLetter() } &&
-     input.any { !it.isLetterOrDigit() }
+            input.any { it.isLetter() } &&
+            input.any { !it.isLetterOrDigit() }
 }
 
 fun validateEmail(input: String): Boolean {
@@ -165,5 +200,33 @@ fun validateEmail(input: String): Boolean {
 
 fun validatePhoneNumber(input: String): Boolean {
     return input.length == 10 && input.all { it.isDigit() }
+}
+
+
+@Composable
+fun AuthScreenButton(btnText : String, buttonColorState : Boolean, modifier: Modifier , onButtonClick : () -> Unit) {
+
+    val buttonColors = ButtonDefaults.outlinedButtonColors(
+        containerColor = if (buttonColorState) MaterialTheme.colorScheme.primary.copy(
+            alpha = 0.7f
+        ) else MaterialTheme.colorScheme.secondaryContainer,
+
+        contentColor = if (buttonColorState) MaterialTheme.colorScheme.onPrimaryContainer
+        else MaterialTheme.colorScheme.onSecondaryContainer
+    )
+
+
+    OutlinedButton(
+        onClick = { onButtonClick.invoke() },
+        modifier = modifier,
+        colors = buttonColors
+    ) {
+        Text(
+            text = btnText,
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
+        )
+    }
+
+
 }
 

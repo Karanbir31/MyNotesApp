@@ -23,10 +23,11 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun  signUser(email : String, password : String){
+    fun  signUser(email : String, password : String, onComplete : () -> Unit){
         try {
             viewModelScope.launch {
                 repo.signInUserWithEmailPassword(email, password)
+                onComplete.invoke()
             }
         }catch (e: Exception){
             Log.e(tag, "signUser: ${e.message}", e)
